@@ -1,0 +1,233 @@
+- table:
+    schema: public
+    name: posts
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        author_id:
+          _eq: X-Hasura-User-Id
+      set:
+        author_id: X-Hasura-User-Id
+      columns:
+      - title
+      - slug
+      - excerpt
+      - cover_image
+      - status
+      - layout_json
+      - scheduled_at
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - title
+      - slug
+      - excerpt
+      - cover_image
+      - status
+      - layout_json
+      - scheduled_at
+      - published_at
+      filter:
+        author_id:
+          _eq: X-Hasura-User-Id
+      check: null
+  delete_permissions:
+  - role: user
+    permission:
+      filter:
+        author_id:
+          _eq: X-Hasura-User-Id
+
+- table:
+    schema: public
+    name: post_blocks
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        post:
+          author_id:
+            _eq: X-Hasura-User-Id
+      columns:
+      - post_id
+      - type
+      - content
+      - grid_id
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - type
+      - content
+      - grid_id
+      filter:
+        post:
+          author_id:
+            _eq: X-Hasura-User-Id
+      check: null
+  delete_permissions:
+  - role: user
+    permission:
+      filter:
+        post:
+          author_id:
+            _eq: X-Hasura-User-Id
+
+- table:
+    schema: public
+    name: social_accounts
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: X-Hasura-User-Id
+      columns:
+      - platform
+      - access_token
+      - refresh_token
+      - token_expires_at
+      - platform_user_id
+      - platform_username
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - access_token
+      - refresh_token
+      - token_expires_at
+      - platform_username
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: null
+  delete_permissions:
+  - role: user
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+
+- table:
+    schema: public
+    name: social_publications
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        _or:
+        - post:
+            author_id:
+              _eq: X-Hasura-User-Id
+        - social_account:
+            user_id:
+              _eq: X-Hasura-User-Id
+      columns:
+      - post_id
+      - social_account_id
+      - platform
+      - status
+      - external_url
+      - external_id
+      - published_at
+      - scheduled_at
+      - error_message
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - status
+      - external_url
+      - external_id
+      - published_at
+      - scheduled_at
+      - error_message
+      filter:
+        _or:
+        - post:
+            author_id:
+              _eq: X-Hasura-User-Id
+        - social_account:
+            user_id:
+              _eq: X-Hasura-User-Id
+      check: null
+  delete_permissions:
+  - role: user
+    permission:
+      filter:
+        _or:
+        - post:
+            author_id:
+              _eq: X-Hasura-User-Id
+        - social_account:
+            user_id:
+              _eq: X-Hasura-User-Id
+
+- table:
+    schema: public
+    name: social_stats
+  insert_permissions:
+  - role: user
+    permission:
+      check:
+        publication:
+          _or:
+          - post:
+              author_id:
+                _eq: X-Hasura-User-Id
+          - social_account:
+              user_id:
+                _eq: X-Hasura-User-Id
+      columns:
+      - publication_id
+      - views
+      - likes
+      - comments
+      - shares
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - views
+      - likes
+      - comments
+      - shares
+      filter:
+        publication:
+          _or:
+          - post:
+              author_id:
+                _eq: X-Hasura-User-Id
+          - social_account:
+              user_id:
+                _eq: X-Hasura-User-Id
+      check: null
+
+- table:
+    schema: public
+    name: subscribers
+  insert_permissions:
+  - role: anonymous
+    permission:
+      check: {}
+      columns:
+      - email
+      - name
+      - status
+      set:
+        status: active
+  update_permissions:
+  - role: anonymous
+    permission:
+      columns:
+      - status
+      filter:
+        status:
+          _eq: active
+      check:
+        status:
+          _eq: unsubscribed
