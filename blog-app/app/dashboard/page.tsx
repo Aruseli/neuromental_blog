@@ -4,9 +4,28 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { setCurrentSession } from '@/lib/hasura/client';
+import { type Post, PostTable } from '@/components/post-table/PostTable';
+import { useQuery } from '@apollo/client';
+import { GET_POSTS } from '@/lib/hasura/queries';
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
+
+  // Передаем сессию в Apollo Client
+  useEffect(() => {
+    if (session) {
+      setCurrentSession(session);
+    }
+  }, [session]);
+
+  // Запрос на получение списка постов
+  const { loading, error, data } = useQuery(GET_POSTS, {
+    variables: { 
+      author_id: session?.user?.id,
+      limit: 5 
+    },
+    skip: !session?.user?.id,
+  });
 
   // Передаем сессию в Apollo Client
   useEffect(() => {
@@ -129,6 +148,19 @@ export default function DashboardPage() {
             <div className="text-gray-600">Просмотров за неделю</div>
           </div>
         </div>
+      </div>
+      
+      {/* Таблица постов */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Мои посты</h1>
+        </div>
+
+        <PostTable 
+          posts={(data?.posts || []) as Post[]} 
+          isLoading={loading} 
+          error={error?.message}
+        />
       </div>
 
       {/* Последние действия */}

@@ -11,8 +11,11 @@
   "dependencies": {
     "@apollo/client": "^3.13.5",
     "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-slot": "^1.1.2",
     "@simplewebauthn/browser": "^9.0.1",
     "@simplewebauthn/server": "^9.0.3",
+    "@tanstack/react-table": "^8.21.2",
     "@tiptap/extension-link": "^2.11.5",
     "@tiptap/extension-placeholder": "^2.11.5",
     "@tiptap/pm": "^2.11.5",

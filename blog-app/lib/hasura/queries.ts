@@ -60,11 +60,14 @@ export const SOCIAL_PUBLICATION_FRAGMENT = gql`
 
 // Запросы для постов
 export const GET_POSTS = gql`
-  query GetPosts($limit: Int, $offset: Int, $status: String) {
+  query GetPosts($limit: Int, $offset: Int, $status: String, $author_id: uuid) {
     posts(
       limit: $limit
       offset: $offset
-      where: { status: { _eq: $status } }
+      where: { 
+        status: { _eq: $status },
+        author_id: { _eq: $author_id }
+      }
       order_by: { created_at: desc }
     ) {
       ...PostFragment
