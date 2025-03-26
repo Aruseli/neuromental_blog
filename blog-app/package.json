@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.13.5",
+    "@radix-ui/react-dialog": "^1.1.6",
     "@simplewebauthn/browser": "^9.0.1",
     "@simplewebauthn/server": "^9.0.3",
     "@tiptap/pm": "^2.11.5",

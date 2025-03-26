@@ -30,30 +30,22 @@ const createHttpLink = () => {
     uri: process.env.NEXT_PUBLIC_HASURA_ENDPOINT || 'http://localhost:8080/v1/graphql',
     credentials: 'include',
     fetch: async (uri, options) => {
-      // Сначала проверяем глобальную сессию, затем пытаемся получить через getSession
       let session = currentSession;
       
-      if (!session) {
-        try {
+      try {
+        if (!session) {
           session = await getSession();
-        } catch (error) {
-          console.error('Ошибка при получении сессии:', error);
         }
-      }
-      
-      if (session && (session as any).token) {
-        // Добавляем заголовки авторизации для Hasura
-        options!.headers = {
-          ...options!.headers as Record<string, string>,
-          'Authorization': `Bearer ${(session as any).token}`,
-        };
-        console.log('Добавлен JWT токен в запрос к Hasura');
-      } else {
-        // Для неавторизованных запросов используем роль anonymous
-        options!.headers = {
-          ...options!.headers as Record<string, string>,
-        };
-        console.log('Запрос к Hasura без авторизации');
+
+        const headers = { ...options!.headers as Record<string, string> };
+        
+        if (session?.accessToken) {
+          headers.Authorization = `Bearer ${session.accessToken}`;
+        }
+        
+        options!.headers = headers;
+      } catch (error) {
+        console.warn('Session handling error:', error);
       }
       
       return fetch(uri, options);

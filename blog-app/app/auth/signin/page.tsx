@@ -1,15 +1,29 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
 
 export default function SignIn() {
+  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<any>(null);
+
+  useEffect(() => {
+    setDebugInfo({ session, status });
+  }, [session, status]);
 
   const handleSignIn = async (provider: string) => {
-    setIsLoading(true);
-    // Перенаправляем на главную страницу после авторизации
-    await signIn(provider, { callbackUrl: '/' });
+    try {
+      setIsLoading(true);
+      // Remove redirect: false to allow standard OAuth flow
+      await signIn(provider, {
+        callbackUrl: '/',
+      });
+    } catch (error) {
+      console.error('SignIn exception:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -23,6 +37,7 @@ export default function SignIn() {
             Выберите способ авторизации
           </p>
         </div>
+        
         <div className="mt-8 space-y-4">
           <button
             onClick={() => handleSignIn('github')}
@@ -42,4 +57,11 @@ export default function SignIn() {
       </div>
     </div>
   );
+  
+  // Add this debug section
+  {process.env.NODE_ENV === 'development' && (
+    <pre className="mt-8 p-4 bg-gray-100 rounded">
+      {JSON.stringify(debugInfo, null, 2)}
+    </pre>
+  )}
 }

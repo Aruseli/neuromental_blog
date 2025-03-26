@@ -1,10 +1,12 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { gql, useQuery } from '@apollo/client';
 import { useEffect } from 'react';
 import { setCurrentSession } from '@/lib/hasura/client';
+import { SignOutDialog } from '@/components/signout-dialog';
+
 
 // GraphQL запрос для получения опубликованных постов
 const GET_PUBLISHED_POSTS = gql`
@@ -27,6 +29,7 @@ const GET_PUBLISHED_POSTS = gql`
 export default function Home() {
   const { data: session, status } = useSession();
   const { loading, error, data } = useQuery(GET_PUBLISHED_POSTS);
+
   
   // Передаем сессию в Apollo Client при каждом изменении
   useEffect(() => {
@@ -55,9 +58,7 @@ export default function Home() {
               <Link href="/dashboard/posts/new" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
                 Новая публикация
               </Link>
-              <Link href="/auth/signout" className="text-red-600 hover:text-red-800">
-                Выйти
-              </Link>
+              <SignOutDialog />
             </>
           ) : (
             <Link href="/auth/signin" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
