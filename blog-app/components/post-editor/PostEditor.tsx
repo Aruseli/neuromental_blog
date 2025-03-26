@@ -25,7 +25,7 @@ interface PostEditorProps {
   isNew?: boolean;
 }
 
-export default function PostEditor({ post, onSave, isSaving, saveMessage, isNew = false }: PostEditorProps) {
+export const PostEditor = ({ post, onSave, isSaving, saveMessage, isNew = false }: PostEditorProps) => {
   const router = useRouter();
   const [title, setTitle] = useState(post.title);
   const [blocks, setBlocks] = useState<PostBlock[]>(post.post_blocks || []);

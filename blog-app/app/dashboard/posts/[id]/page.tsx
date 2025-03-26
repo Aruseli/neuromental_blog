@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import { setCurrentSession } from '@/lib/hasura/client';
-import PostEditor from '@/components/post-editor/PostEditor';
+import { PostEditor } from '@/components/post-editor/PostEditor';
 import type { PostData } from '@/types/post';
 
 // GraphQL запрос для получения поста по ID
