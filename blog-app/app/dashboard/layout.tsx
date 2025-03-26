@@ -1,6 +1,6 @@
 'use client';
 
-import { SignOutDialog } from '@/components/signout-dialog';
+import { SignOutDialog } from '@/components/SignoutDialog';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

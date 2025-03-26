@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { gql, useQuery } from '@apollo/client';
 import { useEffect } from 'react';
 import { setCurrentSession } from '@/lib/hasura/client';
-import { SignOutDialog } from '@/components/signout-dialog';
+import { SignOutDialog } from '@/components/SignoutDialog';
 
 
 // GraphQL запрос для получения опубликованных постов
